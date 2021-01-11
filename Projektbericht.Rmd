@@ -22,7 +22,8 @@ load("Netflix.RData")
 ```
 
 ### Daten Exploration
-```{r warning=FALSE}
+```{r warning=FALSE, R.options = list(width = 10000)}
+library(ggplot2)
 
 dim(netflix_titles)
 
@@ -30,6 +31,9 @@ head(netflix_titles)
 tail(netflix_titles)
 
 summary(netflix_titles)
+
+ggplot(netflix_titles, aes(release_year))+
+  geom_histogram()
 ```
 
 ### Machine Learning Algorithmen

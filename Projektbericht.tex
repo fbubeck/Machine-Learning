@@ -130,6 +130,8 @@ Aspekte}\label{wirtschaftsinformatische-aspekte}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(ggplot2)}
+
 \KeywordTok{dim}\NormalTok{(netflix_titles)}
 \end{Highlighting}
 \end{Shaded}
@@ -145,55 +147,15 @@ Aspekte}\label{wirtschaftsinformatische-aspekte}}
 \end{Shaded}
 
 \begin{verbatim}
-##    show_id    type                                   title
-## 1 81145628   Movie Norm of the North: King Sized Adventure
-## 2 80117401   Movie              Jandino: Whatever it Takes
-## 3 70234439 TV Show                      Transformers Prime
-## 4 80058654 TV Show        Transformers: Robots in Disguise
-## 5 80125979   Movie                            #realityhigh
-## 6 80163890 TV Show                                 Apaches
-##                   director
-## 1 Richard Finn, Tim Maltby
-## 2                     <NA>
-## 3                     <NA>
-## 4                     <NA>
-## 5         Fernando Lebrija
-## 6                     <NA>
-##                                                                                                                                                                                 cast
-## 1                                        Alan Marriott, Andrew Toth, Brian Dobson, Cole Howard, Jennifer Cameron, Jonathan Holmes, Lee Tockar, Lisa Durupt, Maya Kay, Michael Dobson
-## 2                                                                                                                                                                   Jandino Asporaat
-## 3 Peter Cullen, Sumalee Montano, Frank Welker, Jeffrey Combs, Kevin Michael Richardson, Tania Gunadi, Josh Keaton, Steve Blum, Andy Pessoa, Ernie Hudson, Daran Norris, Will Friedle
-## 4                                                           Will Friedle, Darren Criss, Constance Zimmer, Khary Payton, Mitchell Whitfield, Stuart Allan, Ted McGinley, Peter Cullen
-## 5           Nesta Cooper, Kate Walsh, John Michael Higgins, Keith Powers, Alicia Sanz, Jake Borelli, Kid Ink, Yousef Erakat, Rebekah Graf, Anne Winters, Peter Gilroy, Patrick Davis
-## 6                                                                                                      Alberto Ammann, Eloy Azorín, Verónica Echegui, Lucía Jiménez, Claudia Traisac
-##                                    country        date_added release_year
-## 1 United States, India, South Korea, China September 9, 2019         2019
-## 2                           United Kingdom September 9, 2016         2016
-## 3                            United States September 8, 2018         2013
-## 4                            United States September 8, 2018         2016
-## 5                            United States September 8, 2017         2017
-## 6                                    Spain September 8, 2017         2016
-##     rating duration
-## 1    TV-PG   90 min
-## 2    TV-MA   94 min
-## 3 TV-Y7-FV 1 Season
-## 4    TV-Y7 1 Season
-## 5    TV-14   99 min
-## 6    TV-MA 1 Season
-##                                                           listed_in
-## 1                                Children & Family Movies, Comedies
-## 2                                                   Stand-Up Comedy
-## 3                                                          Kids' TV
-## 4                                                          Kids' TV
-## 5                                                          Comedies
-## 6 Crime TV Shows, International TV Shows, Spanish-Language TV Shows
-##                                                                                                                                            description
-## 1         Before planning an awesome wedding for his grandfather, a polar bear king must take back a stolen artifact from an evil archaeologist first.
-## 2    Jandino Asporaat riffs on the challenges of raising kids and serenades the audience with a rousing rendition of "Sex on Fire" in his comedy show.
-## 3         With the help of three human allies, the Autobots once again protect Earth from the onslaught of the Decepticons and their leader, Megatron.
-## 4                       When a prison ship crash unleashes hundreds of Decepticons on Earth, Bumblebee leads a new Autobot force to protect humankind.
-## 5 When nerdy high schooler Dani finally attracts the interest of her longtime crush, she lands in the cross hairs of his ex, a social media celebrity.
-## 6             A young journalist is forced into a life of crime to save his father and family in this series based on the novel by Miguel Sáez Carral.
+## # A tibble: 6 x 12
+##    show_id type    title                                   director                 cast                                                                                                                                                                               country                                  date_added        release_year rating   duration listed_in                                                         description                                                                                                                                           
+##      <dbl> <chr>   <chr>                                   <chr>                    <chr>                                                                                                                                                                              <chr>                                    <chr>                    <dbl> <chr>    <chr>    <chr>                                                             <chr>                                                                                                                                                 
+## 1 81145628 Movie   Norm of the North: King Sized Adventure Richard Finn, Tim Maltby Alan Marriott, Andrew Toth, Brian Dobson, Cole Howard, Jennifer Cameron, Jonathan Holmes, Lee Tockar, Lisa Durupt, Maya Kay, Michael Dobson                                        United States, India, South Korea, China September 9, 2019         2019 TV-PG    90 min   Children & Family Movies, Comedies                                "Before planning an awesome wedding for his grandfather, a polar bear king must take back a stolen artifact from an evil archaeologist first."        
+## 2 80117401 Movie   Jandino: Whatever it Takes              <NA>                     Jandino Asporaat                                                                                                                                                                   United Kingdom                           September 9, 2016         2016 TV-MA    94 min   Stand-Up Comedy                                                   "Jandino Asporaat riffs on the challenges of raising kids and serenades the audience with a rousing rendition of \"Sex on Fire\" in his comedy show." 
+## 3 70234439 TV Show Transformers Prime                      <NA>                     Peter Cullen, Sumalee Montano, Frank Welker, Jeffrey Combs, Kevin Michael Richardson, Tania Gunadi, Josh Keaton, Steve Blum, Andy Pessoa, Ernie Hudson, Daran Norris, Will Friedle United States                            September 8, 2018         2013 TV-Y7-FV 1 Season Kids' TV                                                          "With the help of three human allies, the Autobots once again protect Earth from the onslaught of the Decepticons and their leader, Megatron."        
+## 4 80058654 TV Show Transformers: Robots in Disguise        <NA>                     Will Friedle, Darren Criss, Constance Zimmer, Khary Payton, Mitchell Whitfield, Stuart Allan, Ted McGinley, Peter Cullen                                                           United States                            September 8, 2018         2016 TV-Y7    1 Season Kids' TV                                                          "When a prison ship crash unleashes hundreds of Decepticons on Earth, Bumblebee leads a new Autobot force to protect humankind."                      
+## 5 80125979 Movie   #realityhigh                            Fernando Lebrija         Nesta Cooper, Kate Walsh, John Michael Higgins, Keith Powers, Alicia Sanz, Jake Borelli, Kid Ink, Yousef Erakat, Rebekah Graf, Anne Winters, Peter Gilroy, Patrick Davis           United States                            September 8, 2017         2017 TV-14    99 min   Comedies                                                          "When nerdy high schooler Dani finally attracts the interest of her longtime crush, she lands in the cross hairs of his ex, a social media celebrity."
+## 6 80163890 TV Show Apaches                                 <NA>                     Alberto Ammann, Eloy Azorín, Verónica Echegui, Lucía Jiménez, Claudia Traisac                                                                                                      Spain                                    September 8, 2017         2016 TV-MA    1 Season Crime TV Shows, International TV Shows, Spanish-Language TV Shows "A young journalist is forced into a life of crime to save his father and family in this series based on the novel by Miguel Sáez Carral."
 \end{verbatim}
 
 \begin{Shaded}
@@ -203,41 +165,15 @@ Aspekte}\label{wirtschaftsinformatische-aspekte}}
 \end{Shaded}
 
 \begin{verbatim}
-##       show_id    type                                       title director
-## 6229 80159925 TV Show                                    Kikoriki     <NA>
-## 6230 80000063 TV Show                                Red vs. Blue     <NA>
-## 6231 70286564 TV Show                                       Maron     <NA>
-## 6232 80116008   Movie      Little Baby Bum: Nursery Rhyme Friends     <NA>
-## 6233 70281022 TV Show A Young Doctor's Notebook and Other Stories     <NA>
-## 6234 70153404 TV Show                                     Friends     <NA>
-##                                                                                                                                                     cast
-## 6229                                                                                                                                       Igor Dmitriev
-## 6230 Burnie Burns, Jason Saldaña, Gustavo Sorola, Geoff Lazer Ramsey, Joel Heyman, Matt Hullum, Dan Godwin, Kathleen Zuelch, Yomary Cruz, Nathan Zellner
-## 6231                                                                                   Marc Maron, Judd Hirsch, Josh Brener, Nora Zehetner, Andy Kindler
-## 6232                                                                                                                                                <NA>
-## 6233               Daniel Radcliffe, Jon Hamm, Adam Godley, Christopher Godwin, Rosie Cavaliero, Vicki Pepperdine, Margaret Clunie, Tim Steed, Shaun Pye
-## 6234                                                          Jennifer Aniston, Courteney Cox, Lisa Kudrow, Matt LeBlanc, Matthew Perry, David Schwimmer
-##             country date_added release_year rating   duration
-## 6229           <NA>       <NA>         2010   TV-Y  2 Seasons
-## 6230  United States       <NA>         2015     NR 13 Seasons
-## 6231  United States       <NA>         2016  TV-MA  4 Seasons
-## 6232           <NA>       <NA>         2016   <NA>     60 min
-## 6233 United Kingdom       <NA>         2013  TV-MA  2 Seasons
-## 6234  United States       <NA>         2003  TV-14 10 Seasons
-##                                                    listed_in
-## 6229                                                Kids' TV
-## 6230 TV Action & Adventure, TV Comedies, TV Sci-Fi & Fantasy
-## 6231                                             TV Comedies
-## 6232                                                  Movies
-## 6233                British TV Shows, TV Comedies, TV Dramas
-## 6234                          Classic & Cult TV, TV Comedies
-##                                                                                                                                                 description
-## 6229     A wacky rabbit and his gang of animal pals have fun solving problems, sharing stories and exploring their sometimes magical, always special world.
-## 6230   This parody of first-person shooter games, military life and science-fiction films centers on a civil war fought in the middle of a desolate canyon.
-## 6231 Marc Maron stars as Marc Maron, who interviews fellow comedians for his popular podcast, only to reveal more about his own neuroses and relationships.
-## 6232     Nursery rhymes and original music for children accompanied by bright, playful animation engage and educate about numbers, shapes, colors and more.
-## 6233     Set during the Russian Revolution, this comic miniseries is based on a doctor's memories of his early career working in an out-of-the-way village.
-## 6234      This hit sitcom follows the merry misadventures of six 20-something pals as they navigate the pitfalls of work, life and love in 1990s Manhattan.
+## # A tibble: 6 x 12
+##    show_id type    title                                       director cast                                                                                                                                                country        date_added release_year rating duration   listed_in                                               description                                                                                                                                           
+##      <dbl> <chr>   <chr>                                       <chr>    <chr>                                                                                                                                               <chr>          <chr>             <dbl> <chr>  <chr>      <chr>                                                   <chr>                                                                                                                                                 
+## 1 80159925 TV Show Kikoriki                                    <NA>     Igor Dmitriev                                                                                                                                       <NA>           <NA>               2010 TV-Y   2 Seasons  Kids' TV                                                A wacky rabbit and his gang of animal pals have fun solving problems, sharing stories and exploring their sometimes magical, always special world.    
+## 2 80000063 TV Show Red vs. Blue                                <NA>     Burnie Burns, Jason Saldaña, Gustavo Sorola, Geoff Lazer Ramsey, Joel Heyman, Matt Hullum, Dan Godwin, Kathleen Zuelch, Yomary Cruz, Nathan Zellner United States  <NA>               2015 NR     13 Seasons TV Action & Adventure, TV Comedies, TV Sci-Fi & Fantasy This parody of first-person shooter games, military life and science-fiction films centers on a civil war fought in the middle of a desolate canyon.  
+## 3 70286564 TV Show Maron                                       <NA>     Marc Maron, Judd Hirsch, Josh Brener, Nora Zehetner, Andy Kindler                                                                                   United States  <NA>               2016 TV-MA  4 Seasons  TV Comedies                                             Marc Maron stars as Marc Maron, who interviews fellow comedians for his popular podcast, only to reveal more about his own neuroses and relationships.
+## 4 80116008 Movie   Little Baby Bum: Nursery Rhyme Friends      <NA>     <NA>                                                                                                                                                <NA>           <NA>               2016 <NA>   60 min     Movies                                                  Nursery rhymes and original music for children accompanied by bright, playful animation engage and educate about numbers, shapes, colors and more.    
+## 5 70281022 TV Show A Young Doctor's Notebook and Other Stories <NA>     Daniel Radcliffe, Jon Hamm, Adam Godley, Christopher Godwin, Rosie Cavaliero, Vicki Pepperdine, Margaret Clunie, Tim Steed, Shaun Pye               United Kingdom <NA>               2013 TV-MA  2 Seasons  British TV Shows, TV Comedies, TV Dramas                Set during the Russian Revolution, this comic miniseries is based on a doctor's memories of his early career working in an out-of-the-way village.    
+## 6 70153404 TV Show Friends                                     <NA>     Jennifer Aniston, Courteney Cox, Lisa Kudrow, Matt LeBlanc, Matthew Perry, David Schwimmer                                                          United States  <NA>               2003 TV-14  10 Seasons Classic & Cult TV, TV Comedies                          This hit sitcom follows the merry misadventures of six 20-something pals as they navigate the pitfalls of work, life and love in 1990s Manhattan.
 \end{verbatim}
 
 \begin{Shaded}
@@ -247,28 +183,27 @@ Aspekte}\label{wirtschaftsinformatische-aspekte}}
 \end{Shaded}
 
 \begin{verbatim}
-##     show_id             type              title             director        
-##  Min.   :  247747   Length:6234        Length:6234        Length:6234       
-##  1st Qu.:80035802   Class :character   Class :character   Class :character  
-##  Median :80163367   Mode  :character   Mode  :character   Mode  :character  
-##  Mean   :76703679                                                           
-##  3rd Qu.:80244889                                                           
-##  Max.   :81235729                                                           
-##      cast             country           date_added         release_year 
-##  Length:6234        Length:6234        Length:6234        Min.   :1925  
-##  Class :character   Class :character   Class :character   1st Qu.:2013  
-##  Mode  :character   Mode  :character   Mode  :character   Median :2016  
-##                                                           Mean   :2013  
-##                                                           3rd Qu.:2018  
-##                                                           Max.   :2020  
-##     rating            duration          listed_in         description       
-##  Length:6234        Length:6234        Length:6234        Length:6234       
-##  Class :character   Class :character   Class :character   Class :character  
-##  Mode  :character   Mode  :character   Mode  :character   Mode  :character  
-##                                                                             
-##                                                                             
-## 
+##     show_id             type              title             director             cast             country           date_added         release_year     rating            duration          listed_in         description       
+##  Min.   :  247747   Length:6234        Length:6234        Length:6234        Length:6234        Length:6234        Length:6234        Min.   :1925   Length:6234        Length:6234        Length:6234        Length:6234       
+##  1st Qu.:80035802   Class :character   Class :character   Class :character   Class :character   Class :character   Class :character   1st Qu.:2013   Class :character   Class :character   Class :character   Class :character  
+##  Median :80163367   Mode  :character   Mode  :character   Mode  :character   Mode  :character   Mode  :character   Mode  :character   Median :2016   Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+##  Mean   :76703679                                                                                                                     Mean   :2013                                                                              
+##  3rd Qu.:80244889                                                                                                                     3rd Qu.:2018                                                                              
+##  Max.   :81235729                                                                                                                     Max.   :2020
 \end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{ggplot}\NormalTok{(netflix_titles, }\KeywordTok{aes}\NormalTok{(release_year))}\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_histogram}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+\end{verbatim}
+
+\includegraphics{Projektbericht_files/figure-latex/unnamed-chunk-1-1.pdf}
 
 \hypertarget{machine-learning-algorithmen}{%
 \subsubsection{Machine Learning
