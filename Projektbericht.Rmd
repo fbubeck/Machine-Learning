@@ -1,31 +1,39 @@
 ---
 title: 'Machine Learning Projekt: Netflix'
 output:
-  word_document: default
-  html_document:
-    df_print: paged
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+# Einleitung
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+# Hauptteil
+## Projektmanagement
+### Projektziele
+### Wirtschaftsinformatische Aspekte
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+## Datenanalyse
+```{r load myData, include=FALSE}
+load("Netflix.RData")
 ```
 
-## Including Plots
+### Daten Exploration
+```{r warning=FALSE}
 
-You can also embed plots, for example:
+dim(netflix_titles)
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+head(netflix_titles)
+tail(netflix_titles)
+
+summary(netflix_titles)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+### Machine Learning Algorithmen
+### Ergebnisse
+
+# Fazit
+
+
