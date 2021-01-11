@@ -27,11 +27,3 @@ ggplot(netflixDatatypes, aes(type))+
 
 ggplot(netflixDatatypes, aes(x=release_year, y=type))+
   geom_abline()
-
-#test1
-
-#test2
-
-#test3
-
-#test4
