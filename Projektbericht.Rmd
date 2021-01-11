@@ -1,7 +1,8 @@
 ---
 title: 'Machine Learning Projekt: Netflix'
-output:
-  pdf_document: default
+output: 
+  pdf_document: 
+    keep_tex: yes
 ---
 
 ```{r setup, include=FALSE}
