@@ -1,6 +1,9 @@
 ---
 title: 'Machine Learning Projekt: Netflix'
-output: pdf_document
+output:
+  word_document: default
+  html_document:
+    df_print: paged
 ---
 
 ```{r setup, include=FALSE}
