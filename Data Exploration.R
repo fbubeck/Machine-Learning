@@ -3,6 +3,7 @@ library(ggplot2)
 netflix_titles <- read_csv("netflix_titles.csv")
 save(netflix_titles, file = "Netflix.RData")
 
+#erste Analysen
 show(netflix_titles)
 
 dim(netflix_titles)
@@ -12,9 +13,11 @@ tail(netflix_titles)
 
 summary(netflix_titles)
 
+#Datentypumwandlung von character zu factor als neuen Datensatz
 netflixDatatypes <- netflix_titles
 netflixDatatypes$type <- as.factor(netflixDatatypes$type)
 
+#erste Plots
 ggplot(netflixDatatypes, aes(release_year))+
   geom_histogram(col="black", alpha=.4)+
   labs(title="Histogramm: Erscheinungsjahr")+
