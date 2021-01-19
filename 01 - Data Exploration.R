@@ -66,3 +66,32 @@ ggplot(data=datFull, aes(x=enrolled_university, y=experience))+
   labs(title="Berufserfahrung und Immatrikulatonsstatus")+
   xlab("Immatrikulatonsstatus")+
   ylab("Berufserfahrung")
+
+
+###
+ggplot()+
+  geom_histogram(data=subset(datFull, gender == "Male"), aes(x=training_hours), fill="blue", alpha=.4)+
+  geom_histogram(data=subset(datFull, gender == "Female"), aes(x=training_hours), fill="red", alpha=.4)+
+  geom_histogram(data=subset(datFull, gender == "Other"), aes(x=training_hours), fill="grey", alpha=.4)+
+  theme_classic()+
+  labs(title="Histogramm Anzahl Trainingsstunden und Geschlecht")+
+  xlab("Anzahl Trainingsstunden")+
+  ylab("Count")
+
+ggplot(data=datFull, aes(x = training_hours)) +
+  geom_histogram(bins = 25, color = "black", fill = "orange", alpha=.7) +
+  theme_classic() +
+  facet_wrap(vars(target))+
+  labs(title="Histogramm Trainingsstunden nach target")+
+  xlab("Anzahl Trainingsstunden")+
+  ylab("Count")
+
+lm.fit <- lm( 
+  formula = training_hours ~ education_level, 
+  data    = datFull
+)
+
+plot(x=datFull$education_level, y=datFull$training_hours, col="red")
+abline(reg = lm.fit, col = "blue")
+
+lm.fit$coefficients
