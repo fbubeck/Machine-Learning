@@ -85,13 +85,3 @@ ggplot(data=datFull, aes(x = training_hours)) +
   labs(title="Histogramm Trainingsstunden nach target")+
   xlab("Anzahl Trainingsstunden")+
   ylab("Count")
-
-lm.fit <- lm( 
-  formula = training_hours ~ education_level, 
-  data    = datFull
-)
-
-plot(x=datFull$education_level, y=datFull$training_hours, col="red")
-abline(reg = lm.fit, col = "blue")
-
-lm.fit$coefficients

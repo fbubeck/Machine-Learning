@@ -1,7 +1,7 @@
 ---
 title: "Projektbericht"
 author: "Ferdinand Bubeck und Johannes Bubeck"
-date: "19 1 2021"
+date: "19.01.2021"
 output: word_document
 ---
 
