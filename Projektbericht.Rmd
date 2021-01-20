@@ -14,6 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(readr)
 library(dplyr)
 library(ggplot2)
+library(tidyverse)
 
 #import CSVs
 datTest <- read_csv("aug_test.csv")
@@ -67,7 +68,7 @@ ggplot(data=datFull, aes(x=education_level, y=training_hours))+
   xlab("Art des Abschlusses")+
   ylab("Anzahl Trainingsstunden")
 
-
+#ersetze < und > durch feste numerische Werte um typecast durchzuführen
 datFull$experience <- sub("<1", "0", datFull$experience)
 datFull$experience <- sub(">20", "21", datFull$experience)
 datFull$experience <- as.numeric(datFull$experience)
@@ -76,11 +77,11 @@ datFull %>%
   select(enrolled_university, experience) %>%
   filter(!is.na(enrolled_university),!is.na(experience)) %>%
   ggplot(data=., aes(x=enrolled_university, y=experience))+
-    geom_boxplot(fill="grey", alpha=.7)+
-    theme_classic()+
-    labs(title="Berufserfahrung und Immatrikulatonsstatus")+
-    xlab("Immatrikulatonsstatus")+
-    ylab("Berufserfahrung")
+  geom_boxplot(fill="grey", alpha=.7)+
+  theme_classic()+
+  labs(title="Berufserfahrung und Immatrikulatonsstatus")+
+  xlab("Immatrikulatonsstatus")+
+  ylab("Berufserfahrung")
 
 
 ###
@@ -125,5 +126,18 @@ datFull %>%
     labs(title="Schulabschluss in Bezug auf akademische Disziplin", subtitle = "log2 y-Achse")+
     xlab("akademische Disziplin")+
     scale_y_continuous(trans = 'log2')
+
+datFull %>% 
+  select(city_development_index, training_hours)%>%
+  mutate(city_development_index = fct_lump(as.factor(city_development_index), n = 20)) %>%
+  filter(!is.na(city_development_index)) %>%
+  ggplot(data= ., aes(x=city_development_index, y=training_hours, fill = city_development_index))+
+    geom_col()+
+    theme_light()+
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+    theme(legend.position = "none")+
+    labs(title="Stadtentwicklungsindex und Trainingsstunden", subtitle = "top 20 Stadtentwicklungsindexe")+
+    xlab("Stadtentwicklungsindex")+
+    ylab("Trainingsstunden")
 ```
 

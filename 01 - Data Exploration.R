@@ -114,3 +114,17 @@ datFull %>%
     labs(title="Schulabschluss in Bezug auf akademische Disziplin", subtitle = "log2 y-Achse")+
     xlab("akademische Disziplin")+
     scale_y_continuous(trans = 'log2')
+
+datFull %>% 
+  select(city_development_index, training_hours)%>%
+  mutate(city_development_index = fct_lump(as.factor(city_development_index), n = 20)) %>%
+  filter(!is.na(city_development_index)) %>%
+  ggplot(data= ., aes(x=city_development_index, y=training_hours, fill = city_development_index))+
+    geom_col()+
+    theme_light()+
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+    theme(legend.position = "none")+
+    labs(title="Stadtentwicklungsindex und Trainingsstunden", subtitle = "top 20 Stadtentwicklungsindexe")+
+    xlab("Stadtentwicklungsindex")+
+    ylab("Trainingsstunden")
+  
