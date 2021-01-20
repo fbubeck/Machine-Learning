@@ -2,6 +2,7 @@
 library(readr)
 library(dplyr)
 library(ggplot2)
+library(tidyverse)
 
 #import CSVs
 datTest <- read_csv("aug_test.csv")
@@ -60,7 +61,10 @@ datFull$experience <- sub("<1", "0", datFull$experience)
 datFull$experience <- sub(">20", "21", datFull$experience)
 datFull$experience <- as.numeric(datFull$experience)
 
-ggplot(data=datFull, aes(x=enrolled_university, y=experience))+
+datFull %>% 
+  select(enrolled_university, experience) %>%
+  filter(!is.na(enrolled_university),!is.na(experience)) %>%
+  ggplot(data=., aes(x=enrolled_university, y=experience))+
   geom_boxplot(fill="grey", alpha=.7)+
   theme_classic()+
   labs(title="Berufserfahrung und Immatrikulatonsstatus")+
@@ -78,12 +82,35 @@ ggplot()+
   xlab("Anzahl Trainingsstunden")+
   ylab("Count")
 
-ggplot(data=datFull, aes(x = training_hours)) +
-  geom_histogram(bins = 25, color = "black", fill = "violet", alpha=.7) +
-  theme_classic() +
-  facet_wrap(vars(target))+
-  labs(title="Histogramm Trainingsstunden nach target")+
-  xlab("Anzahl Trainingsstunden")+
-  ylab("Count")
+datFull %>%
+  select(training_hours, target) %>%
+  filter(!is.na(training_hours),!is.na(target)) %>%
+  ggplot(data=., aes(x = training_hours)) +
+    geom_histogram(bins = 25, color = "black", fill = "violet", alpha=.7) +
+    theme_light() +
+    facet_wrap(vars(target))+
+    labs(title="Histogramm Trainingsstunden nach target")+
+    xlab("Anzahl Trainingsstunden")+
+    ylab("Count")
 
+ggplot(data=datFull, aes(x=as.factor(education_level)))+
+  geom_bar(data=datFull, aes(fill=as.factor(education_level)))+
+  facet_wrap(vars(relevent_experience))+
+  theme_light()+
+  theme(legend.position = "none")+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  labs(title="Relevante Berufserfahrung in Bezug auf Schulabaschluss")+
+  xlab("Schulabschluss")
 
+datFull %>% 
+  select(major_discipline, education_level) %>%
+  filter(!is.na(major_discipline),!is.na(education_level)) %>%
+  ggplot(data=.,aes(x=education_level))+
+    geom_bar(aes(fill=education_level))+
+    facet_wrap(vars(major_discipline))+
+    theme_light()+
+    theme(legend.position = "none")+
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+    labs(title="Schulabschluss in Bezug auf akademische Disziplin", subtitle = "log2 y-Achse")+
+    xlab("akademische Disziplin")+
+    scale_y_continuous(trans = 'log2')
