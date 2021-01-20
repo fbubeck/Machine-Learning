@@ -55,7 +55,7 @@ ggplot(data=datFull, aes(x=education_level, y=training_hours))+
   xlab("Art des Abschlusses")+
   ylab("Anzahl Trainingsstunden")
 
-
+#ersetze < und > durch feste numerische Werte um typecast durchzuführen
 datFull$experience <- sub("<1", "0", datFull$experience)
 datFull$experience <- sub(">20", "21", datFull$experience)
 datFull$experience <- as.numeric(datFull$experience)
@@ -79,9 +79,11 @@ ggplot()+
   ylab("Count")
 
 ggplot(data=datFull, aes(x = training_hours)) +
-  geom_histogram(bins = 25, color = "black", fill = "orange", alpha=.7) +
+  geom_histogram(bins = 25, color = "black", fill = "violet", alpha=.7) +
   theme_classic() +
   facet_wrap(vars(target))+
   labs(title="Histogramm Trainingsstunden nach target")+
   xlab("Anzahl Trainingsstunden")+
   ylab("Count")
+
+
