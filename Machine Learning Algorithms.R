@@ -1,5 +1,6 @@
 library(randomForest)
 library(missForest)
+library(caret)
 
 #Dealing with NAs
 #detect variables with more than 5% (threshold) of NAs
@@ -19,15 +20,20 @@ datTrain.ready <- datTrain.imputed$ximp
 apply(datTrain.ready, 2, detectNA)
 
 
-#Model
+#Model Default
 set.seed(35)
-treeModel <- randomForest(target ~ ., datTrainNA, ntree=400, mtry = 3, importance=TRUE)
+model.rf <- randomForest(target ~ ., datTrain.ready, ntree=200, mtry = 3, importance=TRUE)
 
-treeModel
+model.rf
 
-plot(treeModel)
+plot(model.rf)
 
-varImpPlot(treeModel,
+varImpPlot(model.rf,
            sort = T,
            n.var = 5,
            main = "Feature Selection - Top 5 Variables")
+
+#Using Cross Validation to tune parameters
+trControl <- trainControl(method = "cv",
+                          number = 10,
+                          search = "grid")
