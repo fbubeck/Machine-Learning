@@ -1,13 +1,23 @@
 library(randomForest)
+library(missForest)
+
+#Dealing with NAs
+#detect variables with more than 5% (threshold) of NAs
+detectNA <- function(x){sum(is.na(x))/length(x)*100}
+apply(datTrain, 2, detectNA)
 
 #Data Preparation
-datTrainNew <- datTrain %>% select(-enrollee_id, -city, -gender ) %>%
+datTrain.casted <- datTrain %>% select(-enrollee_id, -city, -gender ) %>%
   mutate(city_development_index = as.numeric(city_development_index),
          target = as.factor(target)) %>% as.data.frame() %>%
   mutate_if(is.character, as.factor) #converting all variables with type=char to factor 
 
-#Dealing with NAs
-datTrainNA <- na.omit(datTrainNew)
+#Data Imputation
+datTrain.imputed <- missForest(xmis=datTrain.casted, maxiter=5, ntree=10)
+
+datTrain.ready <- datTrain.imputed$ximp
+apply(datTrain.ready, 2, detectNA)
+
 
 #Model
 set.seed(35)
