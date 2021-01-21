@@ -68,3 +68,5 @@ rf.grid <- train(target ~ .,
 
 print(rf.grid)
 plot(rf.grid)
+
+best.mtry <- rf.grid$bestTune$mtry
