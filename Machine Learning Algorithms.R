@@ -34,6 +34,14 @@ varImpPlot(model.rf,
            main = "Feature Selection - Top 5 Variables")
 
 #Using Cross Validation to tune parameters
+
+#10 fold cross validation
 trControl <- trainControl(method = "cv",
-                          number = 10,
+                          number = 4,
                           search = "grid")
+
+model.rf.train <- train(target~.,
+                    data = datTrain.ready,
+                    method = "rf",
+                    metric = "Accuracy",
+                    trControl = trControl)
