@@ -70,3 +70,46 @@ print(rf.grid)
 plot(rf.grid)
 
 best.mtry <- rf.grid$bestTune$mtry
+
+###Decision tree
+
+library(rpart)
+library(rpart.plot)
+
+dt.fit <- rpart(target ~ ., 
+                data = datTrain.ready)
+
+dt.fit
+summary(dt.fit)
+plot(dt.fit)
+text(dt.fit, use.n = TRUE)
+
+#cross validation
+set.seed(45)
+dt.control <- trainControl(method = "repeatedcv",
+                          number = 10,
+                          repeats=3,
+                          verboseIter = TRUE)
+
+dt.cv <- train(target ~ ., 
+                  data = datTrain.ready,
+                  method = "rpart",
+                  trControl = dt.control,
+                  tuneLength = 10)
+
+dt.cv
+
+#return final model
+cp.best <- dt.cv$bestTune$cp
+
+dt.final <- dt.cv$finalModel
+dt.final$variable.importance
+summary(dt.final)
+
+prp(dt.final, box.palette = "Reds", tweak =1)
+
+
+#predict
+
+pred <- predict.train(dt.cv, datTrain.ready)
+confusionMatrix(pred, datTrain.ready[, 11])
