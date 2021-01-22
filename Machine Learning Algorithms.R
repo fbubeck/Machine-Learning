@@ -5,28 +5,23 @@ library(mice)
 #detect variables with more than 5% (threshold) of NAs
 detectNA <- function(x){sum(is.na(x))/length(x)*100}
 apply(datTrain, 2, detectNA)
-
-#Data Imputation
-
-datTrain.imputed <- mice(datTrain, method = "mean", m = 5)
-datTrain.complete <- complete(datTrain.imputed)
-
-datTrain.ready <- na.omit(datTrain.complete)
-
-
-datTrain.imputed <- missForest(xmis=datTrain.casted, maxiter=5, ntree=10)
-
-datTrain.ready <- datTrain.imputed$ximp
-apply(datTrain.ready, 2, detectNA)
+md.pattern(datTrain[,2:13])
 
 
 #Data Preparation
-datTrain.casted <- datTrain %>% select(-enrollee_id, -city, -gender) %>%
+datTrain.casted <- datTrain %>% select(-enrollee_id, -city) %>%
   mutate(city_development_index = as.numeric(city_development_index),
          target = as.factor(target)) %>% as.data.frame() %>%
   mutate_if(is.character, as.factor) #converting all variables with type=char to factor 
 
 
+#Data Imputation
+
+datTrain.imputed <- mice(datTrain.casted, m = 1, remove.constant = FALSE)
+datTrain.imputed$loggedEvents
+datTrain.ready <- complete(datTrain.imputed)
+
+apply(datTrain.ready, 2, detectNA)
 
 ###Decision tree
 
@@ -44,7 +39,7 @@ dt.cv <- train(target ~ .,
                   data = datTrain.ready,
                   method = "rpart",
                   trControl = dt.control,
-                  tuneLength = 10)
+                  metric = "Accuracy")
 
 dt.cv
 
@@ -60,14 +55,14 @@ prp(dt.final, box.palette = "Reds", tweak =1)
 
 #predict
 
-pred <- predict.train(dt.cv, datTrain.ready)
+dt.pred <- predict.train(dt.cv, datTrain.ready)
 confusionMatrix(pred, datTrain.ready[, 12])
 
 
 ###glm
 #dummy variable
 
-dummy_target <- as.numeric( datTrain.ready[11] == 1)
+dummy_target <- as.numeric(datTrain.ready[11] == 1)
 dat.dummy_target <- cbind(datTrain.ready,dummy_target)
 
 set.seed(4)
