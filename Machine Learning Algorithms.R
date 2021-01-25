@@ -14,6 +14,7 @@ datTrain.casted <- datTrain %>% select(-enrollee_id, -city) %>%
          target = as.factor(target)) %>% as.data.frame() %>%
   mutate_if(is.character, as.factor) #converting all variables with type=char to factor 
 
+  
 
 #Data Imputation
 
@@ -33,7 +34,8 @@ set.seed(45)
 dt.control <- trainControl(method = "repeatedcv",
                           number = 10,
                           repeats=3,
-                          verboseIter = TRUE)
+                          verboseIter = TRUE,
+                          sampling = "up")
 
 dt.cv <- train(target ~ ., 
                   data = datTrain.ready,
@@ -59,17 +61,24 @@ dt.pred <- predict.train(dt.cv, datTrain.ready)
 confusionMatrix(pred, datTrain.ready[, 12])
 
 ##Tree manually
-dt.fit <- rpart(target~ ., data=datTrain.ready)
+set.seed(39)
+dt.fit <- rpart(target~ ., data=datTrain.ready,  cp=-1)
 
 summary(dt.fit)
 
 printcp(dt.fit)
-
 plotcp(dt.fit)
 
-fancyRpartPlot(dt.fit)
+#search cp with lowest Cross-Validation Error
+xerror.min <- dt.fit$cptable[which.min(dt.fit$cptable[,4]),]
+cp.best <- xerror.min[1]
 
-plot(dt.fit)
+#Pruning with best cp
+dt.pruned <- prune(dt.fit, cp=cp.best)
+
+summary(dt.pruned)
+
+
 
 ###glm
 #dummy variable
