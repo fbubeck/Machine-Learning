@@ -12,57 +12,46 @@ md.pattern(datTrain[,2:13])
 datTrain.casted <- datTrain %>% select(-enrollee_id, -city) %>%
   mutate(city_development_index = as.numeric(city_development_index),
          target = as.factor(target)) %>% as.data.frame() %>%
-  mutate_if(is.character, as.factor) #converting all variables with type=char to factor 
+  mutate_if(is.character, as.factor) #converting all variables with type=char to factor
 
   
 
 #Data Imputation
+impute <- mice(datTrain.casted, m = 1, remove.constant = FALSE)
+impute$loggedEvents
+datTrain.imputed <- complete(impute)
 
-datTrain.imputed <- mice(datTrain.casted, m = 1, remove.constant = FALSE)
-datTrain.imputed$loggedEvents
-datTrain.ready <- complete(datTrain.imputed)
+apply(datTrain.imputed, 2, detectNA)
 
-apply(datTrain.ready, 2, detectNA)
+#Data Balancing
+library(groupdata2)
+
+target.balancing <- datTrain.imputed %>% 
+  group_by(target) %>%
+  summarise(no_rows = length(target))
+
+datTrain.balanced <- upsample(datTrain.imputed, cat_col = "target")
+
+datTrain.balanced %>% 
+  group_by(target) %>%
+  summarise(no_rows = length(target))
+
+#Test / Training Split
+set.seed(3024)
+trainingRows <- sort(sample(nrow(datTrain.balanced), nrow(datTrain.balanced)*.7))
+
+Train <- datTrain.balanced[trainingRows,]
+Test <- datTrain.balanced[-trainingRows,]
 
 ###Decision tree
 
 library(rpart)
 library(rpart.plot)
 
-#cross validation
-set.seed(45)
-dt.control <- trainControl(method = "repeatedcv",
-                          number = 10,
-                          repeats=3,
-                          verboseIter = TRUE,
-                          sampling = "up")
 
-dt.cv <- train(target ~ ., 
-                  data = datTrain.ready,
-                  method = "rpart",
-                  trControl = dt.control,
-                  metric = "Accuracy")
-
-dt.cv
-
-#return final model
-cp.best <- dt.cv$bestTune$cp
-
-dt.final <- dt.cv$finalModel
-dt.final$variable.importance
-summary(dt.final)
-
-prp(dt.final, box.palette = "Reds", tweak =1)
-
-
-#predict
-
-dt.pred <- predict.train(dt.cv, datTrain.ready)
-confusionMatrix(pred, datTrain.ready[, 12])
-
-##Tree manually
+##Tree
 set.seed(39)
-dt.fit <- rpart(target~ ., data=datTrain.ready,  cp=-1)
+dt.fit <- rpart(target~ ., data=Train)
 
 summary(dt.fit)
 
@@ -78,13 +67,28 @@ dt.pruned <- prune(dt.fit, cp=cp.best)
 
 summary(dt.pruned)
 
+prp(dt.pruned, box.palette = "Reds", tweak =1)
 
+#Prediction & Performance
+#Train Data
+train.pred <- predict(dt.pruned, newdata = Train, type = "class")
+train.confMatrix <- table(pred.train, Train[, 12])
+
+train.accuracy <- sum(diag(train.confMatrix))/sum(train.confMatrix)
+print(train.accuracy)
+
+#Test Data
+test.pred <- predict(dt.pruned, newdata = Test, type = "class")
+test.confMatrix <- table(pred.test, Test[, 12])
+
+test.accuracy <- sum(diag(test.confMatrix))/sum(test.confMatrix)
+print(test.accuracy)
 
 ###glm
 #dummy variable
 
-dummy_target <- as.numeric(datTrain.ready[11] == 1)
-dat.dummy_target <- cbind(datTrain.ready,dummy_target)
+dummy_target <- as.numeric(Train[12] == 1)
+dat.dummy_target <- cbind(Train,dummy_target)
 
 set.seed(4)
 glm.fit <- glm(target ~ city_development_index, family  = binomial, datTrain.ready)
