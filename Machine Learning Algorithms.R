@@ -58,6 +58,18 @@ prp(dt.final, box.palette = "Reds", tweak =1)
 dt.pred <- predict.train(dt.cv, datTrain.ready)
 confusionMatrix(pred, datTrain.ready[, 12])
 
+##Tree manually
+dt.fit <- rpart(target~ ., data=datTrain.ready)
+
+summary(dt.fit)
+
+printcp(dt.fit)
+
+plotcp(dt.fit)
+
+fancyRpartPlot(dt.fit)
+
+plot(dt.fit)
 
 ###glm
 #dummy variable
