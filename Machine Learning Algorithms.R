@@ -48,8 +48,6 @@ Test <- datTrain.balanced[-trainingRows,]
 library(rpart)
 library(rpart.plot)
 
-
-##Tree
 set.seed(39)
 dt.fit <- rpart(target~ ., data=Train)
 
@@ -67,7 +65,7 @@ dt.pruned <- prune(dt.fit, cp=cp.best)
 
 summary(dt.pruned)
 
-prp(dt.pruned, box.palette = "Reds", tweak =1)
+rpart.plot(dt.pruned)
 
 #Prediction & Performance
 #Train Data
@@ -91,14 +89,14 @@ dummy_target <- as.numeric(Train[12] == 1)
 dat.dummy_target <- cbind(Train,dummy_target)
 
 set.seed(4)
-glm.fit <- glm(target ~ city_development_index, family  = binomial, datTrain.ready)
+glm.fit <- glm(target ~ city_development_index, family  = binomial, Train)
 summary(glm.fit)
 
 varImp(glm.fit, scale = FALSE)
 
 glm.fit.predicted <- predict( 
   object = glm.fit, 
-  data   = datTrain.ready, 
+  data   = Test, 
   type   = "response"
 )
 
@@ -110,4 +108,4 @@ plot(
   y   = dat.dummy_target$dummy_target, 
   col = "red"
 )
-lines(datTrain.ready$city_development_index,glm.fit.predicted, col="blue")
+lines(Train$city_development_index, glm.fit.predicted, col="blue")
