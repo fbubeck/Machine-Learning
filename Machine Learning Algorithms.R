@@ -49,7 +49,7 @@ library(rpart)
 library(rpart.plot)
 
 set.seed(39)
-dt.fit <- rpart(target~ ., data=Train)
+dt.fit <- rpart(target~ ., data=Train, cp=0.005)
 
 summary(dt.fit)
 
@@ -70,14 +70,16 @@ rpart.plot(dt.pruned)
 #Prediction & Performance
 #Train Data
 train.pred <- predict(dt.pruned, newdata = Train, type = "class")
-train.confMatrix <- table(pred.train, Train[, 12])
+train.confMatrix <- table(train.pred, Train[, 12])
+print(train.confMatrix)
 
 train.accuracy <- sum(diag(train.confMatrix))/sum(train.confMatrix)
 print(train.accuracy)
 
 #Test Data
 test.pred <- predict(dt.pruned, newdata = Test, type = "class")
-test.confMatrix <- table(pred.test, Test[, 12])
+test.confMatrix <- table(test.pred, Test[, 12])
+print(test.confMatrix)
 
 test.accuracy <- sum(diag(test.confMatrix))/sum(test.confMatrix)
 print(test.accuracy)
@@ -89,7 +91,7 @@ dummy_target <- as.numeric(Train[12] == 1)
 dat.dummy_target <- cbind(Train,dummy_target)
 
 set.seed(4)
-glm.fit <- glm(target ~ city_development_index, family  = binomial, Train)
+glm.fit <- glm(target ~ ., family  = binomial, Train)
 summary(glm.fit)
 
 varImp(glm.fit, scale = FALSE)

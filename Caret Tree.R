@@ -7,7 +7,7 @@ dt.control <- trainControl(method = "repeatedcv",
 
 dt.cv <- train(target ~ ., 
                data = Train,
-               method = "rpart",
+               method = "rpart2",
                trControl = dt.control)
 
 dt.cv
@@ -19,7 +19,7 @@ dt.final <- dt.cv$finalModel
 dt.final$variable.importance
 summary(dt.final)
 
-prp(dt.final, box.palette = "Reds", tweak =1)
+rpart.plot(dt.final)
 
 
 #predict
