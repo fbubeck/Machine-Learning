@@ -10,21 +10,23 @@ datTest <- read_csv("aug_test.csv")
 datTrain <- read_csv("aug_train.csv")
 
 #join of Train & Test Data to have full Dataset for Exploration
-datFull <- full_join(datTest, datTrain) 
+dat <- full_join(datTest, datTrain) 
 
 #first Impressions of Data
-head(datFull)
-tail(datFull)
+head(dat)
+tail(dat)
     
-summary(datFull)
+summary(dat)
 
-dim(datFull)
+dim(dat)
+
+str(dat)
 
 #count NAs in column gender
-sum(is.na(datFull$gender))
+sum(is.na(dat$gender))
 
 #Plot zu Geschlechterverteilung
-ggplot(data=datFull, aes(x=gender))+
+ggplot(data=dat, aes(x=gender))+
   geom_bar(color='blue', fill='blue', alpha=.5)+
   theme_classic()+
   labs(title="Geschlechterverteilung der Teilnehmer")+
@@ -32,7 +34,7 @@ ggplot(data=datFull, aes(x=gender))+
   ylab("Anzahl")
 
 #Plot der Abschlüsse
-ggplot(data=datFull, aes(x=education_level))+
+ggplot(data=dat, aes(x=education_level))+
   geom_bar(color='orange', fill='orange', alpha=.5)+
   coord_flip()+
   theme_classic()+
@@ -41,7 +43,7 @@ ggplot(data=datFull, aes(x=education_level))+
   ylab("Anzahl")
 
 #Plot Anzahl der Trainngsstunden und Abschluss (Boxplot)
-ggplot(data=datFull, aes(x=education_level, y=training_hours))+
+ggplot(data=dat, aes(x=education_level, y=training_hours))+
   geom_boxplot()+
   theme_classic()+
   labs(title="Abschluss und Anzahl der Trainingsstunden")+
@@ -49,7 +51,7 @@ ggplot(data=datFull, aes(x=education_level, y=training_hours))+
   ylab("Anzahl Trainingsstunden")
 
 #Plot Anzahl der Trainngsstunden und Abschluss (Point/Jitter)
-ggplot(data=datFull, aes(x=education_level, y=training_hours))+
+ggplot(data=dat, aes(x=education_level, y=training_hours))+
   geom_jitter(color='black', alpha=.3, size=.9)+
   theme_classic()+
   labs(title="Abschluss und Anzahl der Trainingsstunden")+
@@ -57,32 +59,32 @@ ggplot(data=datFull, aes(x=education_level, y=training_hours))+
   ylab("Anzahl Trainingsstunden")
 
 #ersetze < und > durch feste numerische Werte um typecast durchzuführen
-datFull$experience <- sub("<1", "0", datFull$experience)
-datFull$experience <- sub(">20", "21", datFull$experience)
-datFull$experience <- as.numeric(datFull$experience)
+dat$experience <- sub("<1", "0", dat$experience)
+dat$experience <- sub(">20", "21", dat$experience)
+dat$experience <- as.numeric(dat$experience)
 
-datFull %>% 
+dat %>% 
   select(enrolled_university, experience) %>%
   filter(!is.na(enrolled_university),!is.na(experience)) %>%
   ggplot(data=., aes(x=enrolled_university, y=experience))+
   geom_boxplot(fill="grey", alpha=.7)+
   theme_classic()+
-  labs(title="Berufserfahrung und Immatrikulatonsstatus")+
-  xlab("Immatrikulatonsstatus")+
+  labs(title="Berufserfahrung und Immatrikulationsstatus")+
+  xlab("Immatrikulationsstatus")+
   ylab("Berufserfahrung")
 
 
 ###
 ggplot()+
-  geom_histogram(data=subset(datFull, gender == "Male"), aes(x=training_hours), fill="blue", alpha=.4)+
-  geom_histogram(data=subset(datFull, gender == "Female"), aes(x=training_hours), fill="red", alpha=.4)+
-  geom_histogram(data=subset(datFull, gender == "Other"), aes(x=training_hours), fill="grey", alpha=.4)+
+  geom_histogram(data=subset(dat, gender == "Male"), aes(x=training_hours), fill="blue", alpha=.4)+
+  geom_histogram(data=subset(dat, gender == "Female"), aes(x=training_hours), fill="red", alpha=.4)+
+  geom_histogram(data=subset(dat, gender == "Other"), aes(x=training_hours), fill="grey", alpha=.4)+
   theme_classic()+
   labs(title="Histogramm Anzahl Trainingsstunden und Geschlecht")+
   xlab("Anzahl Trainingsstunden")+
   ylab("Count")
 
-datFull %>%
+dat %>%
   select(training_hours, target) %>%
   filter(!is.na(training_hours),!is.na(target)) %>%
   ggplot(data=., aes(x = training_hours)) +
@@ -93,8 +95,8 @@ datFull %>%
     xlab("Anzahl Trainingsstunden")+
     ylab("Count")
 
-ggplot(data=datFull, aes(x=as.factor(education_level)))+
-  geom_bar(data=datFull, aes(fill=as.factor(education_level)))+
+ggplot(data=dat, aes(x=as.factor(education_level)))+
+  geom_bar(data=dat, aes(fill=as.factor(education_level)))+
   facet_wrap(vars(relevent_experience))+
   theme_light()+
   theme(legend.position = "none")+
@@ -102,7 +104,7 @@ ggplot(data=datFull, aes(x=as.factor(education_level)))+
   labs(title="Relevante Berufserfahrung in Bezug auf Schulabaschluss")+
   xlab("Schulabschluss")
 
-datFull %>% 
+dat %>% 
   select(major_discipline, education_level) %>%
   filter(!is.na(major_discipline),!is.na(education_level)) %>%
   ggplot(data=.,aes(x=education_level))+
@@ -115,7 +117,7 @@ datFull %>%
     xlab("akademische Disziplin")+
     scale_y_continuous(trans = 'log2')
 
-datFull %>% 
+dat %>% 
   select(city_development_index, training_hours)%>%
   mutate(city_development_index = fct_lump(as.factor(city_development_index), n = 20)) %>%
   filter(!is.na(city_development_index)) %>%

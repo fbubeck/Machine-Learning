@@ -5,7 +5,6 @@ library(mice)
 #detect variables with more than 5% (threshold) of NAs
 detectNA <- function(x){sum(is.na(x))/length(x)*100}
 apply(datTrain, 2, detectNA)
-md.pattern(datTrain[,2:13])
 
 
 #Data Preparation
