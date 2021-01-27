@@ -1,5 +1,4 @@
 library(caret)
-library(mice)
 
 #Dealing with NAs
 #detect variables with more than 5% (threshold) of NAs
@@ -8,42 +7,45 @@ apply(datTrain, 2, detectNA)
 
 
 #Data Preparation
-datTrain.casted <- datTrain %>% select(-enrollee_id, -city) %>%
+datTrain_casted <- datTrain %>% 
+  select(-enrollee_id, -city) %>%
   mutate(city_development_index = as.numeric(city_development_index),
-         target = as.factor(target)) %>% as.data.frame() %>%
+         target = as.factor(target)) %>% 
+  as.data.frame() %>%
   mutate_if(is.character, as.factor) #converting all variables with type=char to factor
 
   
 
 #Data Imputation
-impute <- mice(datTrain.casted, m = 1, remove.constant = FALSE)
-impute$loggedEvents
-datTrain.imputed <- complete(impute)
+library(mice)
 
-apply(datTrain.imputed, 2, detectNA)
+impute <- mice(datTrain_casted, m = 1, remove.constant = FALSE) #takes time :)
+impute$loggedEvents
+datTrain_imputed <- complete(impute)
+
+apply(datTrain_imputed, 2, detectNA)
 
 #Data Balancing
 library(groupdata2)
 
-target.balancing <- datTrain.imputed %>% 
+target.balancing <- datTrain_imputed %>% 
   group_by(target) %>%
   summarise(no_rows = length(target))
 
-datTrain.balanced <- upsample(datTrain.imputed, cat_col = "target")
+datTrain_balanced <- upsample(datTrain_imputed, cat_col = "target")
 
-datTrain.balanced %>% 
+datTrain_balanced %>% 
   group_by(target) %>%
   summarise(no_rows = length(target))
 
 #Test / Training Split
 set.seed(3024)
-trainingRows <- sort(sample(nrow(datTrain.balanced), nrow(datTrain.balanced)*.7))
+trainingRows <- sort(sample(nrow(datTrain_balanced), nrow(datTrain_balanced)*.7))
 
-Train <- datTrain.balanced[trainingRows,]
-Test <- datTrain.balanced[-trainingRows,]
+Train <- datTrain_balanced[trainingRows,]
+Test <- datTrain_balanced[-trainingRows,]
 
 ###Decision tree
-
 library(rpart)
 library(rpart.plot)
 
@@ -58,6 +60,7 @@ plotcp(dt.fit)
 #search cp with lowest Cross-Validation Error
 xerror.min <- dt.fit$cptable[which.min(dt.fit$cptable[,4]),]
 cp.best <- xerror.min[1]
+cp.best
 
 #Pruning with best cp
 dt.pruned <- prune(dt.fit, cp=cp.best)
