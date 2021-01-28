@@ -196,10 +196,35 @@ Test <- datTrain_balanced[-trainingRows,]
 library(rpart)
 library(rpart.plot)
 
+##1st tree
+set.seed(34)
+dt.default <- rpart(target~ ., data=Train, cp=-1)
+
+printcp(dt.default)
+plotcp(dt.default)
+
+#Prediction & Performance
+#Train Data
+train.default.pred <- predict(dt.default, newdata = Train, type = "class")
+train.default.confMatrix <- table(train.default.pred, Train[, 12])
+print(train.default.confMatrix)
+
+train.default.accuracy <- sum(diag(train.default.confMatrix))/sum(train.default.confMatrix)
+print(train.default.accuracy)
+
+#Test Data
+test.default.pred <- predict(dt.default, newdata = Test, type = "class")
+test.default.confMatrix <- table(test.default.pred, Test[, 12])
+print(test.default.confMatrix)
+
+test.default.accuracy <- sum(diag(test.default.confMatrix))/sum(test.default.confMatrix)
+print(test.default.accuracy)
+
+##2nd tree with cp limitation
 set.seed(39)
 dt.fit <- rpart(target~ ., data=Train, cp=0.005)
 
-summary(dt.fit)
+#summary(dt.fit)
 
 printcp(dt.fit)
 plotcp(dt.fit)
@@ -212,7 +237,7 @@ cp.best
 #Pruning with best cp
 dt.pruned <- prune(dt.fit, cp=cp.best)
 
-summary(dt.pruned)
+#summary(dt.pruned)
 
 rpart.plot(dt.pruned)
 
@@ -241,7 +266,7 @@ dat.dummy_target <- cbind(Train,dummy_target)
 
 set.seed(4)
 glm.fit <- glm(target ~ ., family  = binomial, Train)
-summary(glm.fit)
+#summary(glm.fit)
 
 varImp(glm.fit, scale = FALSE)
 
@@ -251,7 +276,7 @@ glm.fit.predicted <- predict(
   type   = "response"
 )
 
-glm.fit.predicted
+#glm.fit.predicted
 plot(glm.fit)
 
 plot(
