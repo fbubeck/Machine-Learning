@@ -51,9 +51,10 @@ ggplot(data=dat, aes(x=education_level, y=training_hours))+
   ylab("Anzahl Trainingsstunden")
 
 #Plot Anzahl der Trainngsstunden und Abschluss (Point/Jitter)
-ggplot(data=dat, aes(x=education_level, y=training_hours))+
-  geom_jitter(color='black', alpha=.3, size=.9)+
+ggplot(data=dat, aes(x=education_level, y=training_hours, color=education_level))+
+  geom_jitter(alpha=.3, size=.9)+
   theme_classic()+
+  theme(legend.position = "none")+
   labs(title="Abschluss und Anzahl der Trainingsstunden")+
   xlab("Art des Abschlusses")+
   ylab("Anzahl Trainingsstunden")
