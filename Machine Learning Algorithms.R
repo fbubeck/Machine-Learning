@@ -115,12 +115,8 @@ print(test.confMatrix)
 test.accuracy <- sum(diag(test.confMatrix))/sum(test.confMatrix)
 print(test.accuracy)
 
+
 ###glm
-#dummy variable
-
-dummy_target <- as.numeric(Train[12] == 1)
-dat.dummy_target <- cbind(Train,dummy_target)
-
 set.seed(4)
 glm.fit <- glm(target ~ ., family  = binomial, Train)
 summary(glm.fit)
@@ -129,12 +125,21 @@ varImp(glm.fit, scale = FALSE)
 
 glm.fit.predicted <- predict( 
   object = glm.fit, 
-  data   = Test, 
+  data   = Train, 
   type   = "response"
 )
 
+confusionMatrix(data = glm.fit.predicted>0.5, reference = Train$target)
+
 glm.fit.predicted
 plot(glm.fit)
+
+table(glm.fit.predicted > 0.5, Train$target)
+
+
+#dummy variable
+dummy_target <- as.numeric(Train[12] == 1)
+dat.dummy_target <- cbind(Train,dummy_target)
 
 plot(
   x   = dat.dummy_target$city_development_index, 
