@@ -123,18 +123,31 @@ summary(glm.fit)
 
 varImp(glm.fit, scale = FALSE)
 
-glm.fit.predicted <- predict( 
+#Prediction & Performance
+#Training Error
+glm.train.predicted <- predict( 
   object = glm.fit, 
   data   = Train, 
   type   = "response"
 )
 
-confusionMatrix(data = glm.fit.predicted>0.5, reference = Train$target)
+glm.confMatrix <- table(glm.train.predicted > 0.5, Train$target)
+glm.accuracy <- sum(diag(glm.confMatrix))/sum(glm.confMatrix)
+print(glm.accuracy)
+
+#Test Error
+glm.test.predicted <- predict( 
+  object = glm.fit, 
+  data   = Test, 
+  type   = "response"
+)
+
+glm.test.confMatrix <- table(glm.test.predicted > 0.5, Test$target)
+glm.test.accuracy <- sum(diag(glm.test.confMatrix))/sum(glm.test.confMatrix)
+print(glm.test.accuracy)
 
 glm.fit.predicted
 plot(glm.fit)
-
-table(glm.fit.predicted > 0.5, Train$target)
 
 
 #dummy variable
