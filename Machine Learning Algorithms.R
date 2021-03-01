@@ -124,30 +124,35 @@ summary(glm.fit)
 varImp(glm.fit, scale = FALSE)
 
 #Prediction & Performance
-#Training Error
-glm.train.predicted <- predict( 
-  object = glm.fit, 
-  data   = Train, 
-  type   = "response"
-)
 
-glm.confMatrix <- table(glm.train.predicted > 0.5, Train$target)
-glm.accuracy <- sum(diag(glm.confMatrix))/sum(glm.confMatrix)
-print(glm.accuracy)
+#Training Accuracy with cut-off from 0.1 to 0.9
+c = 0.1
+for(i in 1:9){
+  pred <- ifelse(predict(glm.fit, type="response")>c,1,0)
+  matrix <- table(pred, Train[,12])
+  acc[i] <- sum(diag(matrix))/sum(matrix)
+  
+  pred <- NULL
+  matrix <- NULL
+  
+  c = c + 0.1;
+}
+acc.train <- data.frame(x=c(0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9), y=acc)
 
+
+ggplot(data=acc.train, aes(x=x, y=y))+
+  geom_line()+
+  theme_classic()+
+  xlab("Cut-Off")+
+  ylab("Training-Accuracy")+
+  labs(title="Training Accuracy in Bezug auf verschiedene Cut-Off Parameter")
+  
 #Test Error
-glm.test.predicted <- predict( 
-  object = glm.fit, 
-  data   = Test, 
-  type   = "response"
-)
+glm.test.predicted <- predict.glm(glm.fit, Test)
 
 glm.test.confMatrix <- table(glm.test.predicted > 0.5, Test$target)
 glm.test.accuracy <- sum(diag(glm.test.confMatrix))/sum(glm.test.confMatrix)
 print(glm.test.accuracy)
-
-glm.fit.predicted
-plot(glm.fit)
 
 
 #dummy variable
