@@ -121,8 +121,6 @@ set.seed(4)
 glm.fit <- glm(target ~ ., family  = binomial, Train)
 summary(glm.fit)
 
-varImp(glm.fit, scale = FALSE)
-
 #Prediction & Performance
 
 #Training Accuracy with cut-off from 0.1 to 0.9
@@ -137,8 +135,8 @@ for(i in 1:9){
   
   c = c + 0.1;
 }
-acc.train <- data.frame(x=c(0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9), y=acc)
 
+acc.train <- data.frame(x=c(0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9), y=acc)
 
 ggplot(data=acc.train, aes(x=x, y=y))+
   geom_line()+
@@ -148,20 +146,10 @@ ggplot(data=acc.train, aes(x=x, y=y))+
   labs(title="Training Accuracy in Bezug auf verschiedene Cut-Off Parameter")
   
 #Test Error
-glm.test.predicted <- predict.glm(glm.fit, Test)
+glm.test.predicted <- predict.glm(glm.fit, Test, type = "response")
 
 glm.test.confMatrix <- table(glm.test.predicted > 0.5, Test$target)
 glm.test.accuracy <- sum(diag(glm.test.confMatrix))/sum(glm.test.confMatrix)
 print(glm.test.accuracy)
 
-
-#dummy variable
-dummy_target <- as.numeric(Train[12] == 1)
-dat.dummy_target <- cbind(Train,dummy_target)
-
-plot(
-  x   = dat.dummy_target$city_development_index, 
-  y   = dat.dummy_target$dummy_target, 
-  col = "red"
-)
-lines(Train$city_development_index, glm.fit.predicted, col="blue")
+varImp(glm.fit, scale = FALSE)
