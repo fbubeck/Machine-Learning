@@ -117,6 +117,8 @@ print(test.accuracy)
 
 
 ###glm
+library(ggplot2)
+
 set.seed(4)
 glm.fit <- glm(target ~ ., family  = binomial, Train)
 summary(glm.fit)
@@ -144,12 +146,19 @@ ggplot(data=acc.train, aes(x=x, y=y))+
   xlab("Cut-Off")+
   ylab("Training-Accuracy")+
   labs(title="Training Accuracy in Bezug auf verschiedene Cut-Off Parameter")
+
+#Train Error
+glm.train.predicted <- predict.glm(glm.fit, Train, type = "response")
+glm.train.confMatrix <- table(glm.train.predicted > 0.5, Train$target)
+glm.train.confMatrix
+glm.train.accuracy <- sum(diag(glm.train.confMatrix))/sum(glm.train.confMatrix)
+print(glm.train.accuracy)
+
   
 #Test Error
 glm.test.predicted <- predict.glm(glm.fit, Test, type = "response")
 
 glm.test.confMatrix <- table(glm.test.predicted > 0.5, Test$target)
+glm.test.confMatrix
 glm.test.accuracy <- sum(diag(glm.test.confMatrix))/sum(glm.test.confMatrix)
 print(glm.test.accuracy)
-
-varImp(glm.fit, scale = FALSE)
