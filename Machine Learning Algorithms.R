@@ -162,3 +162,4 @@ glm.test.confMatrix <- table(glm.test.predicted > 0.5, Test$target)
 glm.test.confMatrix
 glm.test.accuracy <- sum(diag(glm.test.confMatrix))/sum(glm.test.confMatrix)
 print(glm.test.accuracy)
+
