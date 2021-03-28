@@ -25,29 +25,31 @@ datTrain_imputed <- complete(impute)
 
 apply(datTrain_imputed, 2, detectNA)
 
+#Test / Training Split
+set.seed(3024)
+trainingRows <- sort(sample(nrow(datTrain_imputed), nrow(datTrain_imputed)*.7))
+
+Train <- datTrain_imputed[trainingRows,]
+Test <- datTrain_imputed[-trainingRows,]
+
 #Data Balancing
-datTrain_imputed %>% 
+Train %>% 
   group_by(target) %>%
   summarise(no_rows = length(target))
 
 library(groupdata2)
 
-target.balancing <- datTrain_imputed %>% 
+target.balancing <- Train %>% 
   group_by(target) %>%
   summarise(no_rows = length(target))
 
-datTrain_balanced <- upsample(datTrain_imputed, cat_col = "target")
+datTrain_balanced <- upsample(Train, cat_col = "target")
 
 datTrain_balanced %>% 
   group_by(target) %>%
   summarise(no_rows = length(target))
 
-#Test / Training Split
-set.seed(3024)
-trainingRows <- sort(sample(nrow(datTrain_balanced), nrow(datTrain_balanced)*.7))
-
-Train <- datTrain_balanced[trainingRows,]
-Test <- datTrain_balanced[-trainingRows,]
+Train <- datTrain_balanced
 
 ###Decision tree
 library(rpart)

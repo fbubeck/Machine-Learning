@@ -6,6 +6,7 @@ datTrain_NaReduced <- na.omit(datTrain_notImputed)
 detectNA <- function(x){sum(is.na(x))/length(x)*100}
 apply(datTrain_NaReduced, 2, detectNA)
 
+
 #Test / Training Split
 set.seed(304)
 trainingRows2 <- sort(sample(nrow(datTrain_NaReduced), nrow(datTrain_NaReduced)*.7))
@@ -42,11 +43,6 @@ print(test.default_NotImputed.confMatrix)
 test.default_NotImputed.accuracy <- sum(diag(test.default_NotImputed.confMatrix))/sum(test.default_NotImputed.confMatrix)
 print(test.default_NotImputed.accuracy)
 
-#search cp with lowest Cross-Validation Error
-xerror.min2 <- dt.default_NotImputed$cptable[which.min(dt.default_NotImputed$cptable[,4]),]
-cp.best2 <- xerror.min2[1]
-cp.best2
-
 #cp splitted by n=4
 cp.manual <- 0.00486855
 
@@ -56,6 +52,8 @@ dt.pruned_manually <- prune(dt.default_NotImputed, cp=cp.manual)
 summary(dt.pruned_manually)
 
 rpart.plot(dt.pruned_manually)
+
+rpart.rules(dt.pruned_manually)
 
 #Train Data
 train.pruned_NotImputed.pred <- predict(dt.pruned_manually, newdata = Train_NaReduced, type = "class")
