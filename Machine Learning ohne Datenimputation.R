@@ -100,7 +100,7 @@ ggplot(data=acc.train, aes(x=x, y=y))+
   theme_classic()+
   xlab("Cut-Off")+
   ylab("Training-Accuracy")+
-  labs(title="Training Accuracy in Bezug auf verschiedene Cut-Off Parameter")
+  labs(title="Training-Accuracy (verschiedene Cut-Off Werte)")
 
 #best Cut-Off
 best.acc <- max(acc)
@@ -123,3 +123,6 @@ glm.test.confMatrix
 glm.test.accuracy <- sum(diag(glm.test.confMatrix))/sum(glm.test.confMatrix)
 print(glm.test.accuracy)
 
+#Variable Importance
+library(caret)
+varImp(glm.fit_NotImputed)

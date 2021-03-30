@@ -4,7 +4,7 @@ author: "Ferdinand Bubeck und Johannes Bubeck"
 date: "25 3 2021"
 output: word_document
 ---
-```{r}
+```{r message=FALSE, warning=FALSE}
 #import libraries
 library(readr)
 library(dplyr)
@@ -39,65 +39,13 @@ trainingRows2 <- sort(sample(nrow(datTrain_NaReduced), nrow(datTrain_NaReduced)*
 Train_NaReduced <- datTrain_NaReduced[trainingRows2,]
 Test_NaReduced <- datTrain_NaReduced[-trainingRows2,]
 
-#Decision Tree
-library(rpart)
-library(rpart.plot)
+set.seed(7)
+glm.fit_NotImputed <- glm(target ~ ., family  = binomial, Train_NaReduced)
+summary(glm.fit_NotImputed)
 
-##1st tree
-set.seed(31)
-dt.default_NotImputed <- rpart(target~ ., data=Train_NaReduced, cp=-1)
-
-printcp(dt.default_NotImputed)
-plotcp(dt.default_NotImputed)
-
-
-#Prediction & Performance
-#Train Data
-train.default_NotImputed.pred <- predict(dt.default_NotImputed, newdata = Train_NaReduced, type = "class")
-train.default_NotImputed.confMatrix <- table(train.default_NotImputed.pred, Train_NaReduced[, 12])
-print(train.default_NotImputed.confMatrix)
-
-train.default_NotImputed.accuracy <- sum(diag(train.default_NotImputed.confMatrix))/sum(train.default_NotImputed.confMatrix)
-print(train.default_NotImputed.accuracy)
-
-#Test Data
-test.default_NotImputed.pred <- predict(dt.default_NotImputed, newdata = Test_NaReduced, type = "class")
-test.default_NotImputed.confMatrix <- table(test.default_NotImputed.pred, Test_NaReduced[, 12])
-print(test.default_NotImputed.confMatrix)
-
-test.default_NotImputed.accuracy <- sum(diag(test.default_NotImputed.confMatrix))/sum(test.default_NotImputed.confMatrix)
-print(test.default_NotImputed.accuracy)
-
-#search cp with lowest Cross-Validation Error
-xerror.min2 <- dt.default_NotImputed$cptable[which.min(dt.default_NotImputed$cptable[,4]),]
-cp.best2 <- xerror.min2[1]
-cp.best2
-
-#cp splitted by n=4
-cp.manual <- 0.00486855
-
-#pruning
-dt.pruned_manually <- prune(dt.default_NotImputed, cp=cp.manual)
-
-summary(dt.pruned_manually)
-
-rpart.plot(dt.pruned_manually)
-
-#Train Data
-train.pruned_NotImputed.pred <- predict(dt.pruned_manually, newdata = Train_NaReduced, type = "class")
-train.pruned_NotImputed.confMatrix <- table(train.pruned_NotImputed.pred, Train_NaReduced[, 12])
-print(train.pruned_NotImputed.confMatrix)
-
-train.pruned_NotImputed.accuracy <- sum(diag(train.pruned_NotImputed.confMatrix))/sum(train.pruned_NotImputed.confMatrix)
-print(train.pruned_NotImputed.accuracy)
-
-#Test Data
-test.pruned_NotImputed.pred <- predict(dt.pruned_manually, newdata = Test_NaReduced, type = "class")
-test.pruned_NotImputed.confMatrix <- table(test.pruned_NotImputed.pred, Test_NaReduced[, 12])
-print(test.pruned_NotImputed.confMatrix)
-
-test.pruned_NotImputed.accuracy <- sum(diag(test.pruned_NotImputed.confMatrix))/sum(test.pruned_NotImputed.confMatrix)
-print(test.pruned_NotImputed.accuracy)
+#Variable Importance
+library(caret)
+varImp(glm.fit_NotImputed)
 
 ```
 
